@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="bg-red padding radius text-center shadow-blur">
+    测试
     <!-- <swiper v-if="imgUrls.length > 0" indidator-dots="imgUrls.length > 1" >
       <block v-for="(item, index) in imgUrls" :key="index" >
         <swiper-item>
@@ -18,13 +19,8 @@
 
 <script>
 import { formatTime } from '@/utils/index'
-import card from '@/components/card'
 
 export default {
-  components: {
-    card
-  },
-
   data () {
     return {
       logs: []

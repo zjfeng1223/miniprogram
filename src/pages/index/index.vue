@@ -1,68 +1,63 @@
 <template>
-  <div @click="clickHandle">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />
-
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
+  <div class="page">
+    <top-handle text="账单"></top-handle>
+    <view class="page__bd page__bd_spacing">
+      <div class="selected-date">
+        <picker mode="date" fields="month" @change="bindDateChange">
+          <p>{{selectDate}}</p>
+        </picker>
       </div>
-    </div>
+      <div class="panel">
+        <p class="title">
+          <span>总支出</span>
+        </p>
+        <h3 class="num">0</h3>
+        <p class="handle">
+          <span class="tips">
+            总收入
+            <i class="n">0</i>
+          </span>
 
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
+          <span class="tips">
+            剩余预算
+            <i class="n">0</i>
+          </span>
+        </p>
       </div>
+    </view>
+
+    <van-button type="primary">按钮</van-button>
+    <div class="is-empty" @click="onShow">
+      <div>图标</div>
+      <p>点击此处来添加本月的第一笔数据吧~</p>
     </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" :value="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
-
-    <div class="all">
-        <div class="left">
-        </div>
-        <div class="right">
-        </div>
-    </div>
+    <van-popup :show="isShow" round position="bottom" custom-style="height: 90%" @close="onClose">内容</van-popup>
   </div>
-</template>
-
-<script>
-import card from '@/components/card'
-
+</template><script>
+import { formatTime } from '@/utils/index'
 export default {
   data () {
     return {
-      motto: 'Hello miniprograme',
-      userInfo: {
-        nickName: 'mpvue',
-        avatarUrl: 'http://mpvue.com/assets/logo.png'
-      }
+      isShow: false,
+      date: '',
+      selectDate: formatTime(new Date(), true)
     }
   },
 
-  components: {
-    card
-  },
-
   methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      if (mpvuePlatform === 'wx') {
-        mpvue.switchTab({ url })
-      } else {
-        mpvue.navigateTo({ url })
-      }
+    onShow () {
+      this.isShow = true
+    },
+    onClose () {
+      this.isShow = false
+    },
+    bindDateChange (e) {
+      let arr = e.target.value.split('-')
+      this.selectDate = arr[0] + '年' + arr[1] + '月'
+      console.log(e.target.value.split('-'))
     },
     clickHandle (ev) {
-      console.log('clickHandle:', ev)
-      // throw {message: 'custom test'}
+      console.log('clickHandle:', ev) // throw {message: 'custom test'}
     }
   },
 
@@ -71,56 +66,42 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-}
-
-.userinfo-nickname {
-  color: #aaa;
-}
-
-.usermotto {
-  margin-top: 150px;
-}
-
-.form-control {
-  display: block;
-  padding: 0 12px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-}
-.all{
-  width:7.5rem;
-  height:1rem;
-  background-color:blue;
-}
-.all:after{
-  display:block;
-  content:'';
-  clear:both;
-}
-.left{
-  float:left;
-  width:3rem;
-  height:1rem;
-  background-color:red;
-}
-
-.right{
-  float:left;
-  width:4.5rem;
-  height:1rem;
-  background-color:green;
+<style scoped lang="scss">
+.page {
+  .selected-date {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  .panel {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 6px;
+    .title {
+      font-size: 14px;
+      color: #ff5b39;
+    }
+    .num {
+      font-size: 32px;
+      font-weight: bold;
+    }
+    .handle {
+      font-size: 14px;
+      .tips {
+        color: #979797;
+        margin-right: 20px;
+        .n {
+          display: inline;
+          color: #4d4c4d;
+          padding: 0 5px;
+        }
+      }
+    }
+  }
+  .is-empty {
+    padding: 20px;
+    text-align: center;
+    color: #989898;
+  }
 }
 </style>
